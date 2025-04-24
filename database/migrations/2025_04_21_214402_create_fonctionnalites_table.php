@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('keyfonctionnalite')->unique();
             $table->string('libelle');
             $table->string('code')->unique();
-            $table->integer('statut')->default(1);
+            $table->integer('statut')->default(10);
             $table->unsignedBigInteger('createdby')->nullable();
             $table->unsignedBigInteger('updatedby')->nullable();
             $table->timestamps();

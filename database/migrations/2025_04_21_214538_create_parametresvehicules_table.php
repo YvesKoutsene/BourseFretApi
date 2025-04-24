@@ -27,7 +27,7 @@ return new class extends Migration
             $table->double('capacitelitre');
             $table->integer('capacitepieds');
             $table->boolean('reefer');
-            $table->integer('statut')->default(1);
+            $table->integer('statut')->default(10);
             $table->unsignedBigInteger('createdby')->nullable();
             $table->unsignedBigInteger('updatedby')->nullable();
             $table->timestamps();

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tourneestransporteur', function (Blueprint $table) {
             $table->string('keytourneestransporteur')->unique();
-            $table->integer('statut')->default(1);
+            $table->integer('statut')->default(10);
             $table->unsignedBigInteger('idtournee')->nullable();
             $table->unsignedBigInteger('idtransporteur')->nullable();
             $table->unsignedBigInteger('createdby')->nullable();

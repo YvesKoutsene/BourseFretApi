@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nom');
             $table->string('prenom');
             $table->unsignedBigInteger('idtransporteur')->nullable();
-            $table->integer('statut')->default(1);
+            $table->integer('statut')->default(10);
             $table->unsignedBigInteger('createdby')->nullable();
             $table->unsignedBigInteger('updatedby')->nullable();
             $table->timestamps();

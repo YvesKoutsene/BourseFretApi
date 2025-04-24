@@ -19,7 +19,7 @@ return new class extends Migration
             $table->boolean('isrequired')->default(true);
             $table->string('extension');
             $table->integer('typepiece');
-            $table->integer('statut')->default(1);
+            $table->integer('statut')->default(10);
             $table->unsignedBigInteger('createdby')->nullable();
             $table->unsignedBigInteger('updatedby')->nullable();
             $table->timestamps();

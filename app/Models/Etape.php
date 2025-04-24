@@ -11,7 +11,7 @@ class Etape extends Model
     protected $table = 'etape';
 
     protected $fillable = [
-        'keyetape', 'postion', 'datepostion', 'longitude', 'laltitude',
+        'keyetape', 'postion', 'datepostion', 'longitude', 'latitude',
          'idtournee', 'statut', 'createdby', 'updatedby'
     ];
 

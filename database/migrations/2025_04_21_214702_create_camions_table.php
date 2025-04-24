@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('formecamion');
             $table->double('poidsvide');
             $table->double('poidsmax');
-            $table->integer('statut')->default(1);
+            $table->integer('statut')->default(10);
             $table->unsignedBigInteger('idtransporteur')->nullable();
             $table->unsignedBigInteger('idchauffeur')->nullable();
             $table->integer('createdby')->nullable();

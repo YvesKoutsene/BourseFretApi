@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('postion');
             $table->dateTime('datepostion');
             $table->double('longitude');
-            $table->double('laltitude');
+            $table->double('latitude');
             $table->unsignedBigInteger('idtournee');
-            $table->integer('statut')->default(1);
+            $table->integer('statut')->default(10);
             $table->unsignedBigInteger('createdby')->nullable();
             $table->unsignedBigInteger('updatedby')->nullable();
             $table->timestamps();

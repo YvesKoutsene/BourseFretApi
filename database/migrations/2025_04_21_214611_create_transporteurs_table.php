@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('typetransporteur');
             $table->string('contact');
             $table->string('adresse');
-            $table->integer('statut')->default(1);
+            $table->integer('statut')->default(10);
             $table->unsignedBigInteger('createdby')->nullable();
             $table->unsignedBigInteger('updatedby')->nullable();
             $table->timestamps();

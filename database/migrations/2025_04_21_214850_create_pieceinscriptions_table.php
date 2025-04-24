@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pieceinscription', function (Blueprint $table) {
             $table->string('keypieceinscription')->unique();
             $table->string('piece');
-            $table->integer('statut')->default(1);
+            $table->integer('statut')->default(10);
             $table->unsignedBigInteger('idinscription');
             $table->unsignedBigInteger('idpieceafournir');
             $table->unsignedBigInteger('createdby')->nullable();

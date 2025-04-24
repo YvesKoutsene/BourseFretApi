@@ -9,7 +9,7 @@ use App\Models\Fret;
 
 class FretController extends Controller
 {
-    // Fonction de récupération de tous les frets d'un client
+    // Fonction de récupération des frets actifs d'un client
     public function index(Request $request, $key)
     {
         if (!$request->user()) {
@@ -23,7 +23,8 @@ class FretController extends Controller
             return response()->json(null, 404); // Client non trouvé
         }
 
-        $query = Fret::where('idclient', $client->id);
+        $query = Fret::where('idclient', $client->id)
+            ->whereNotIn('statut', [0, 9]); // Exclure les statuts 0 et 9
 
         // Recherche par numéro fret ou numero dossier
         if ($request->filled('q')) {
@@ -49,6 +50,7 @@ class FretController extends Controller
 
         return response()->json($frets, 200); // Ok
     }
+
 
     // Fonction de lecture d'un fret
     public function show(Request $request, $key)

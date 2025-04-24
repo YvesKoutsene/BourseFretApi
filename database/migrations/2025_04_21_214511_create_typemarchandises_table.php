@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('keytypemarchandise')->unique();
             $table->string('libelle');
-            $table->integer('statut')->default(1);
+            $table->integer('statut')->default(10);
             $table->unsignedBigInteger('createdby')->nullable();
             $table->unsignedBigInteger('updatedby')->nullable();
             $table->timestamps();

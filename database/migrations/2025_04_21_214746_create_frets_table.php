@@ -27,7 +27,7 @@ return new class extends Migration
             $table->dateTime('debutpublication');
             $table->dateTime('finpublication');
             $table->string('numerodossier');
-            $table->boolean('isdemande')->default(1);
+            $table->boolean('isdemande')->default(10);
             $table->string('documentsupplementaire')->nullable();
             $table->string('numerofret')->nullable();
             $table->string('photofret')->nullable();

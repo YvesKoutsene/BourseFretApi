@@ -44,6 +44,7 @@ class TourneeController extends Controller
         // Récupère les tournées liées à ces frets
         $tournees = Tournee::with(['fret', 'camionActif', 'derniereEtape'])
             ->whereIn('idfret', $fretIds)
+            ->whereNotIn('statut', [0, 9])
             ->paginate($pageSize);
 
         if ($tournees->isEmpty()) {

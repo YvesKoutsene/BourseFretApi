@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('autorisation', function (Blueprint $table) {
             $table->string('keyautorisation')->unique();
-            $table->integer('statut')->default(1);
+            $table->integer('statut')->default(10);
             $table->unsignedBigInteger('idprofil');
             $table->unsignedBigInteger('idfonctionnalite');
             $table->unsignedBigInteger('createdby')->nullable();

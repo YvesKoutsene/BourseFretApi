@@ -23,7 +23,7 @@ return new class extends Migration
             $table->datetime('datefin');
             $table->unsignedBigInteger('idtransporteur');
             $table->unsignedBigInteger('idchauffeur');
-            $table->integer('statut')->default(1);
+            $table->integer('statut')->default(10);
             $table->foreign('idtransporteur')->references('id')->on('transporteur')->onDelete('restrict');
             $table->foreign('idchauffeur')->references('id')->on('chauffeur')->onDelete('restrict');
             $table->unsignedBigInteger('createdby')->nullable();

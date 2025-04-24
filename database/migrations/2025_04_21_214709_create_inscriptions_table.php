@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('keyinscription')->unique();
             $table->string('email')->unique();
             $table->string('token');
-            $table->integer('statut')->default(1);
+            $table->integer('statut')->default(10);
             $table->unsignedBigInteger('idclient')->nullable();
             $table->unsignedBigInteger('idtransporteur')->nullable();
             $table->timestamps();

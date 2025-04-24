@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('piececamion', function (Blueprint $table) {
            $table->string('keypiececamion')->unique();
            $table->string('piece');
-           $table->integer('statut')->default(1);
+           $table->integer('statut')->default(10);
            $table->unsignedBigInteger('idcamion');
            $table->unsignedBigInteger('idpieceafournir');
            $table->unsignedBigInteger('createdby')->nullable();

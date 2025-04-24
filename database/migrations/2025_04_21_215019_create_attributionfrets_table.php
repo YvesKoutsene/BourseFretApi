@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('keyattribution')->unique();
             $table->unsignedBigInteger('idfret');
             $table->unsignedBigInteger('idtransporteur');
-            $table->integer('statut')->default(1);
+            $table->integer('statut')->default(10);
             $table->unsignedBigInteger('createdby')->nullable();
             $table->unsignedBigInteger('updatedby')->nullable();
             $table->timestamps();
