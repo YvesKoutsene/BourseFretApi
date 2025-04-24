@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Client;
+namespace App\Http\Controllers\Transporteur;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Utilisateur;
-use App\Models\Client;
+use App\Models\Transporteur;
 use App\Models\Pays;
 
-class AuthController extends Controller
+class AuthTransController extends Controller
 {
+
     /**
-     * Connexion d’un utilisateur client
+     * Connexion d’un utilisateur transporteur
      */
 
     public function connexion(Request $request)
@@ -24,7 +25,7 @@ class AuthController extends Controller
         ]);
 
         // Chargement de l'utilisateur avec ses relations
-        $user = Utilisateur::with(['indicatif', 'pays', 'client'])
+        $user = Utilisateur::with(['indicatif', 'pays', 'transporteur'])
             ->where('email', $request->email)
             ->first();
 
@@ -38,10 +39,10 @@ class AuthController extends Controller
             return response()->json(null, 403); // Utilisateur désactivé
         }
 
-        // Restriction : uniquement les clients
-        if (!$user->client) {
+        // Restriction : uniquement les transporteurs
+        if (!$user->transporteur) {
             return response()->json([
-                'message' => 'Seuls les clients peuvent se connecter ici.'
+                'message' => 'Seuls les transporteurs peuvent se connecter ici.'
             ], 403);
         }
 
@@ -61,7 +62,7 @@ class AuthController extends Controller
 
 
     /**
-     * Déconnexion d’un utilisateur client
+     * Déconnexion d’un utilisateur transporteur
      */
     public function deconnexion(Request $request)
     {
@@ -71,10 +72,10 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
-        // Restriction : uniquement les clients
-        if (!$user->client) {
+        // Restriction : uniquement les transporteurs
+        if (!$user->transporteur()) {
             return response()->json([
-                'message' => 'Seuls les clients peuvent se deconnecter ici.'
+                'message' => 'Seuls les transporteurs peuvent se deconnecter ici.'
             ], 403);
         }
 
@@ -84,26 +85,9 @@ class AuthController extends Controller
         return response()->json(null, 204); //Ok
     }
 
-    /**
-     * Liste de tous les pays
-     */
-    public function index(Request $request)
-    {
-        if (!$request->user()) {
-            return response()->json(null, 401); // Non authentifié
-        }
-
-        $pays = Pays::all();
-
-        if ($pays->isEmpty()) {
-            return response()->json(null, 204); // No content
-        }
-
-        return response()->json($pays, 200); // Ok
-    }
 
     /**
-     * Mise à jour des informations d’un utilisateur client
+     * Mise à jour des informations d’un utilisateur transporteur
      */
     public function update(Request $request, $key)
     {
@@ -124,10 +108,10 @@ class AuthController extends Controller
             return response()->json(null, 403); // Accès interdit
         }
 
-        // Restriction : uniquement les clients
-        if (!$user->client) {
+        // Restriction : uniquement les transporteurs
+        if (!$user->transporteur()) {
             return response()->json([
-                'message' => 'Seuls les clients peuvent modifier leur compte.'
+                'message' => 'Seuls les transporteurs peuvent modifier leur compte ici.'
             ], 403);
         }
 
@@ -145,11 +129,11 @@ class AuthController extends Controller
             'idindicatif' => $request->indicatif,
         ]);
 
-        // Mise à jour dans la table client si nécessaire
-        if (is_null($user->createdby) && $user->idclient) {
-            $client = $user->client;
-            if ($client) {
-                $client->update([
+        // Mise à jour dans la table transporteur si nécessaire
+        if (is_null($user->createdby) && $user->idtransporteur) {
+            $transporteur = $user->transporteur;
+            if ($transporteur) {
+                $transporteur->update([
                     'nom'     => $request->nom,
                     'prenom'  => $request->prenom,
                     'contact' => $request->telephone,
@@ -157,10 +141,11 @@ class AuthController extends Controller
             }
         }
 
-        $user->load(['indicatif', 'pays', 'client']);
+        $user->load(['indicatif', 'pays', 'transporteur']);
 
         return response()->json([
             'user' => $user->makeHidden(['motdepasse', 'access_token', 'createdby', 'updatedby']),
         ], 200);
     }
+
 }

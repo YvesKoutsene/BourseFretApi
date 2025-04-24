@@ -6,6 +6,8 @@ use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\FretController;
 use App\Http\Controllers\Client\TourneeController;
 
+use App\Http\Controllers\Transporteur\AuthTransController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -21,16 +23,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+#Pour Client
 // Route de connexion
 Route::post('/v1/connexion', [AuthController::class, 'connexion']);
 
+// Route de déconnexion
 Route::middleware('auth:sanctum')->group(function () {
-    // Route de déconnexion
     Route::post('/v1/deconnexion', [AuthController::class, 'deconnexion']);
 });
-
-// Route de renvoie de la liste des pays
-Route::get('/v1/pays/index', [AuthController::class, 'index']);
 
 // Route de mise à jour de l'utilisateur
 Route::put('/v1/user/update/{key}', [AuthController::class, 'update']);
@@ -46,3 +46,18 @@ Route::get('/v1/tournee/index/{key}', [TourneeController::class, 'index']);
 
 // Route de lecture d'une tournee
 Route::get('/v1/tournee/{key}', [TourneeController::class, 'show']);
+
+#En commun pour client et transporteur
+// Route de renvoie de la liste des pays
+Route::get('/v1/pays/index', [AuthController::class, 'index']);
+
+
+#Pour Transporteur
+// Route de connexion
+Route::post('/v1/transporteur/connexion', [AuthTransController::class, 'connexion']);
+
+// Route de déconnexion
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/v1/transporteur/deconnexion', [AuthTransController::class, 'deconnexion']);
+});
+

@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Transporteur extends Model
 {
     use HasFactory;
+    protected $table = 'transporteur';
+
 
     protected $fillable = [
-        'keyclient', 'nom', 'prenom', 'email', 'raisonsociale', 'typeclient',
+        'keytransporteur', 'nom', 'prenom', 'email', 'raisonsociale', 'typetransporteur',
         'contact', 'adresse', 'statut'
     ];
 
