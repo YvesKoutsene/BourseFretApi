@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('camionstournees', function (Blueprint $table) {
+            $table->id(); // Ajoute une clé primaire auto-incrémentée
             $table->string('keycamionstournee')->unique();
             $table->integer('statut')->default(10);
             $table->unsignedBigInteger('idcamion')->nullable();

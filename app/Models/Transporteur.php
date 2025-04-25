@@ -13,7 +13,7 @@ class Transporteur extends Model
 
     protected $fillable = [
         'keytransporteur', 'nom', 'prenom', 'email', 'raisonsociale', 'typetransporteur',
-        'contact', 'adresse', 'statut'
+        'contact', 'adresse', 'statut', 'createdby', 'updatedby'
     ];
 
 
