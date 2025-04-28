@@ -33,6 +33,11 @@ class Fret extends Model
        return $this->belongsTo(Typemarchandise::class, 'idtypemarchandise');
    }
 
+   public function typevehicule()
+   {
+        return $this->belongsTo(Typevehicule::class, 'idtypevehicule');
+   }
+
    public function parametresvehicule()
    {
         return $this->belongsTo(Parametresvehicules::class, 'idparametresvehicule');

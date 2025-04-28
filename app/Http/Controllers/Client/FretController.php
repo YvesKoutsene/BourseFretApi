@@ -36,7 +36,7 @@ class FretController extends Controller
         }
 
         // Chargement des relations
-        $query->with(['lieuchargement', 'lieudechargement', 'typemarchandise']);
+        $query->with(['lieuchargement', 'lieudechargement', 'typemarchandise','typevehicule']);
 
         // Pagination
         $pageSize = $request->input('page_size', 15);
@@ -64,6 +64,7 @@ class FretController extends Controller
             'lieudechargement',
             'typemarchandise',
             'parametresvehicule',
+            'typevehicule',
         ])->where('keyfret', $key)->first();
 
         if (!$fret) {

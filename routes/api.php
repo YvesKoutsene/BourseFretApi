@@ -7,6 +7,7 @@ use App\Http\Controllers\Client\FretController;
 use App\Http\Controllers\Client\TourneeController;
 
 use App\Http\Controllers\Transporteur\AuthTransController;
+use App\Http\Controllers\Transporteur\FretTransController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,10 +55,12 @@ Route::get('/v1/pays/index', [AuthController::class, 'index']);
 
 #Pour Transporteur
 // Route de connexion
-Route::post('/v1/transporteur/connexion', [AuthTransController::class, 'connexion']);
+Route::post('/v1/trans/connexion', [AuthTransController::class, 'connexion']);
 
 // Route de déconnexion
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/v1/transporteur/deconnexion', [AuthTransController::class, 'deconnexion']);
+    Route::post('/v1/trans/deconnexion', [AuthTransController::class, 'deconnexion']);
 });
 
+// Route de renvoie des frets attribués 
+Route::get('/v1/trans/frets-attribues/{key}', [FretTransController::class, 'index']);
