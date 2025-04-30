@@ -47,4 +47,11 @@ class Tournee extends Model
             ->wherePivot('statut', 10); // Seulement le camion actifs
     }
 
+    public function chauffeurActif()
+    {
+        return $this->belongsToMany(Chauffeur::class, 'chauffeurstournee', 'idtournee', 'idchauffeur')
+            ->withPivot('statut')
+            ->wherePivot('statut', 10); // Seulement le camion actifs
+    }
+
 }

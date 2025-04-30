@@ -5,9 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\FretController;
 use App\Http\Controllers\Client\TourneeController;
-
 use App\Http\Controllers\Transporteur\AuthTransController;
 use App\Http\Controllers\Transporteur\FretTransController;
+use App\Http\Controllers\Transporteur\TransTourneeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -64,3 +65,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // Route de renvoie des frets attribués 
 Route::get('/v1/trans/frets-attribues/{key}', [FretTransController::class, 'index']);
+
+// Route de renvoie des tournées d'un fret
+Route::get('/v1/trans/tournees-fret/{key}', [TransTourneeController::class, 'index']);
+
+// Route de récupération des camions et chauffeurs libre d'un transporteur
+Route::get('/v1/trans/disponibilites/{key}', [TransTourneeController::class, 'getDisponibilitesTransporteur']);
+
+// Route pour la création de tournées d'un fret
+Route::post('/v1/trans/tournees-fret/store/{key}', [TransTourneeController::class, 'store']);
