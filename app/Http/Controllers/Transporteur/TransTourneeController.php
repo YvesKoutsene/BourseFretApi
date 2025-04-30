@@ -46,9 +46,9 @@ class TransTourneeController extends Controller
     // Fonction permettant de renvoyer les camions et chauffeurs disponible pour un transporteur
     public function getDisponibilitesTransporteur(Request $request, $key)
     {
-        /*if (!$request->user()) {
+        if (!$request->user()) {
             return response()->json(null, 401); // Non authentifié
-        }*/
+        }
 
         $transporteur = Transporteur::where('keytransporteur', $key)->first();
 
@@ -75,6 +75,7 @@ class TransTourneeController extends Controller
     // Fonction d'enrégistrement d'une tournée d'un fret
     public function store(Request $request, $key)
     {
+
         if (!$request->user()) {
             return response()->json(null, 401); // Non authentifié
         }
@@ -85,11 +86,10 @@ class TransTourneeController extends Controller
             return response()->json(['message' => 'Fret introuvable'], 404);
         }
 
-        // Validation manuelle des paramètres dans l'URL
-        $validator = Validator::make($request->query(), [
+        $request->validate([
             'idcamion' => 'required|exists:camion,id',
             'idchauffeur' => 'required|exists:chauffeur,id',
-            'poids' => 'required|numeric',
+            'poids' => 'required|string',
             'numerobl' => 'required|string',
             'numeroconteneur' => 'required|string',
             'idlieudepart' => 'required|exists:lieu,id',
@@ -98,14 +98,6 @@ class TransTourneeController extends Controller
             'datearrivee' => 'required|date',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        // Récupération des données
-        $idcamion = $request->query('idcamion');
-        $idchauffeur = $request->query('idchauffeur');
-
         // Étape 2 : Vérifier le nombre maximal de tournées
         $nbTourneesExistantes = Tournee::where('idfret', $fret->id)->count();
         if ($nbTourneesExistantes >= $fret->nombrecamions) {
@@ -113,13 +105,13 @@ class TransTourneeController extends Controller
         }
 
         // Étape 3 : Vérifier disponibilité du camion
-        $camion = Camion::where('id', $idcamion)->where('statut', 10)->first();
+        $camion = Camion::where('id', $request->idcamion)->where('statut', 10)->first();
         if (!$camion) {
             return response()->json(['message' => 'Camion non disponible'], 400);
         }
 
         // Étape 4 : Vérifier disponibilité du chauffeur
-        $chauffeur = Chauffeur::where('id', $idchauffeur)->where('statut', 10)->first();
+        $chauffeur = Chauffeur::where('id', $request->idchauffeur)->where('statut', 10)->first();
         if (!$chauffeur) {
             return response()->json(['message' => 'Chauffeur non disponible'], 400);
         }
@@ -128,13 +120,13 @@ class TransTourneeController extends Controller
         $tournee = new Tournee();
         $tournee->keytournee = Str::uuid()->toString();
         $tournee->idfret = $fret->id;
-        $tournee->idlieudepart = $request->query('idlieudepart');
-        $tournee->idlieuarrivee = $request->query('idlieuarrivee');
-        $tournee->datedepart = $request->query('datedepart');
-        $tournee->datearrivee = $request->query('datearrivee');
-        $tournee->poids = $request->query('poids');
-        $tournee->numerobl = $request->query('numerobl');
-        $tournee->numeroconteneur = $request->query('numeroconteneur');
+        $tournee->idlieudepart_ = $request->idlieudepart;
+        $tournee->idlieuarrivee_ = $request->idlieuarrivee;
+        $tournee->datedepart = $request->datedepart;
+        $tournee->datearrivee = $request->datearrivee;
+        $tournee->poids = $request->poids;
+        $tournee->numerobl = $request->numerobl;
+        $tournee->numeroconteneur = $request->numeroconteneur;
         $tournee->save();
 
         // Étape 6 : Mettre à jour les statuts
@@ -165,7 +157,6 @@ class TransTourneeController extends Controller
 
         return response()->json([
             'message' => 'Tournée créée avec succès',
-            'keytournee' => $tournee->keytournee,
             'tournee' => $tournee
         ], 201);
     }
