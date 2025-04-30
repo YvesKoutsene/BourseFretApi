@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
-class TransTourneeController extends Controller
+class TourneeTransController extends Controller
 {
     // Fonction permettant de renvoyer les tournées d'un fret
     public function index(Request $request, $key)
@@ -89,16 +89,27 @@ class TransTourneeController extends Controller
         $request->validate([
             'idcamion' => 'required|exists:camion,id',
             'idchauffeur' => 'required|exists:chauffeur,id',
-            'poids' => 'required|string',
-            'numerobl' => 'required|string',
-            'numeroconteneur' => 'required|string',
+            'poids' => 'required|numeric',
+            'numerobl' => 'string',
+            'numeroconteneur' => 'string',
             'idlieudepart' => 'required|exists:lieu,id',
             'idlieuarrivee' => 'required|exists:lieu,id',
             'datedepart' => 'required|date',
             'datearrivee' => 'required|date',
         ]);
 
-        // Étape 2 : Vérifier le nombre maximal de tournées
+        // Étape 2 : Vérifier le nombre maximal de tournées et les dates
+        // Validation des dates
+        $today = now()->toDateString(); 
+        if ($request->datedepart < $today || $request->datearrivee < $today) {
+            return response()->json(['message' => 'Les dates doivent être supérieures ou égales à aujourd\'hui.'], 400);
+        }
+
+        if ($request->datedepart >= $request->datearrivee) {
+            return response()->json(['message' => 'La date de départ doit être inférieure à la date d\'arrivée.'], 400);
+        }
+
+        // Validation de nombre maximal
         $nbTourneesExistantes = Tournee::where('idfret', $fret->id)->count();
         if ($nbTourneesExistantes >= $fret->nombrecamions) {
             return response()->json(['message' => 'Nombre maximal de tournées atteint pour ce fret'], 400);
@@ -120,8 +131,8 @@ class TransTourneeController extends Controller
         $tournee = new Tournee();
         $tournee->keytournee = Str::uuid()->toString();
         $tournee->idfret = $fret->id;
-        $tournee->idlieudepart_ = $request->idlieudepart;
-        $tournee->idlieuarrivee_ = $request->idlieuarrivee;
+        $tournee->idlieudepart = $request->idlieudepart;
+        $tournee->idlieuarrivee = $request->idlieuarrivee;
         $tournee->datedepart = $request->datedepart;
         $tournee->datearrivee = $request->datearrivee;
         $tournee->poids = $request->poids;

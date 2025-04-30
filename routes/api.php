@@ -6,8 +6,9 @@ use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\FretController;
 use App\Http\Controllers\Client\TourneeController;
 use App\Http\Controllers\Transporteur\AuthTransController;
+use App\Http\Controllers\Transporteur\EtapeTransController;
 use App\Http\Controllers\Transporteur\FretTransController;
-use App\Http\Controllers\Transporteur\TransTourneeController;
+use App\Http\Controllers\Transporteur\TourneeTransController;
 
 
 /*
@@ -67,10 +68,14 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/v1/trans/frets-attribues/{key}', [FretTransController::class, 'index']);
 
 // Route de renvoie des tournées d'un fret
-Route::get('/v1/trans/tournees-fret/{key}', [TransTourneeController::class, 'index']);
+Route::get('/v1/trans/tournees-fret/{key}', [TourneeTransController::class, 'index']);
 
 // Route de récupération des camions et chauffeurs libre d'un transporteur
-Route::get('/v1/trans/disponibilites/{key}', [TransTourneeController::class, 'getDisponibilitesTransporteur']);
+Route::get('/v1/trans/disponibilites/{key}', [TourneeTransController::class, 'getDisponibilitesTransporteur']);
 
 // Route pour la création de tournées d'un fret
-Route::post('/v1/trans/tournees-fret/store/{key}', [TransTourneeController::class, 'store']);
+Route::post('/v1/trans/tournees-fret/store/{key}', [TourneeTransController::class, 'store']);
+
+// Route pour démarrer une tournée
+Route::post('/v1/trans/tournees-fret/demarrer/{key}', [EtapeTransController::class, 'demarrerTournee']);
+
