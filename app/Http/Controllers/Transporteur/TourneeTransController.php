@@ -105,8 +105,8 @@ class TourneeTransController extends Controller
             return response()->json(['message' => 'Les dates doivent être supérieures ou égales à aujourd\'hui.'], 400);
         }
 
-        if ($request->datedepart >= $request->datearrivee) {
-            return response()->json(['message' => 'La date de départ doit être inférieure à la date d\'arrivée.'], 400);
+        if ($request->datedepart > $request->datearrivee) {
+            return response()->json(['message' => 'La date de départ doit être inférieure ou égale à la date d\'arrivée.'], 400);
         }
 
         // Validation de nombre maximal

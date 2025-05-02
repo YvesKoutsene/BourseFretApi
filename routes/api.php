@@ -76,5 +76,8 @@ Route::get('/v1/trans/disponibilites/{key}', [TourneeTransController::class, 'ge
 Route::post('/v1/trans/tournees-fret/store/{key}', [TourneeTransController::class, 'store']);
 
 // Route pour démarrer une tournée
-Route::post('/v1/trans/tournees-fret/demarrer/{key}', [EtapeTransController::class, 'demarrerTournee']);
+Route::post('/v1/trans/tournees-fret/demarrer/{key}', [EtapeTransController::class, 'demarrerTournee']); 
+
+// Route pour clôturer une tournée
+Route::post('/v1/trans/tournees-fret/cloturer/{key}', [EtapeTransController::class, 'cloturerTournee']); 
 

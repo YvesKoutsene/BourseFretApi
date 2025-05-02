@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('etape', function (Blueprint $table) {
             $table->id();
             $table->string('keyetape')->unique();
-            $table->string('postion');
-            $table->dateTime('datepostion');
+            $table->string('position');
+            $table->dateTime('dateposition');
             $table->double('longitude');
             $table->double('latitude');
             $table->unsignedBigInteger('idtournee');

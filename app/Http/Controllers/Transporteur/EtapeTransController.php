@@ -15,7 +15,7 @@ class EtapeTransController extends Controller
     {
         // Vérifiez si l'utilisateur est authentifié (commenté ici)
         if (!$request->user()) {
-        return response()->json(null, 401); // Non authentifié
+            return response()->json(null, 401); // Non authentifié
         }
 
         // Validation des données envoyées dans le body
@@ -38,22 +38,84 @@ class EtapeTransController extends Controller
             ], 400);
         }
 
-        $tournee->statut = 20;
-        $tournee->save();
-
         // Création de la première étape
         Etape::create([
             'keyetape'     => Str::uuid()->toString(),
             'position'     => $validated['position'],
             'dateposition' => now(),
-            'latitude'    => $validated['latitude'], 
+            'latitude'    => $validated['latitude'],
             'longitude'    => $validated['longitude'],
             'statut'       => 10,
             'idtournee'    => $tournee->id,
         ]);
 
+        $tournee->statut = 20;
+        $tournee->save();
+
         return response()->json([
             'tournee' => $tournee,
         ], 200); // Ok
     }
+
+    // Fonction permettant de clôturer une tournée 
+    public function cloturerTournee(Request $request, $key)
+    {
+        if (!$request->user()) {
+            return response()->json(null, 401); // Non authentifié
+        }
+
+        $validated = $request->validate([
+            'position' => 'required|string|max:255',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+        ]);
+
+        $tournee = Tournee::where('keytournee', $key)->first();
+
+        if (!$tournee) {
+            return response()->json(null, 404); // Tournée non trouvée
+        }
+
+        if ($tournee->statut !== 20) {
+            return response()->json([
+                'message' => 'Cette tournée est déjà clôturée ou n’est pas en cours.',
+            ], 400);
+        }
+
+        // Création de la dernière étape
+        Etape::create([
+            'keyetape'     => Str::uuid()->toString(),
+            'position'     => $validated['position'],
+            'dateposition' => now(),
+            'latitude'     => $validated['latitude'],
+            'longitude'    => $validated['longitude'],
+            'statut'       => 10,
+            'idtournee'    => $tournee->id,
+        ]);
+
+        // Changement du statut de la tournée à 30 (clôturée)
+        $tournee->statut = 30;
+        $tournee->save();
+
+        // Récupération du camion actif via la relation pivot (statut 10)
+        $camion = $tournee->camionActif()->first();
+        if ($camion) {
+            $camion->statut = 10; 
+            $camion->save();
+        }
+
+        // Récupération du chauffeur actif via la relation pivot (statut 10)
+        $chauffeur = $tournee->chauffeurActif()->first();
+        if ($chauffeur) {
+            $chauffeur->statut = 10; 
+            $chauffeur->save();
+        }
+
+        return response()->json([
+            'tournee' => $tournee,
+        ], 200);
+    }
+
+
+    
 }

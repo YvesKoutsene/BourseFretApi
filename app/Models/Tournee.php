@@ -37,21 +37,21 @@ class Tournee extends Model
 
    public function derniereEtape()
    {
-       return $this->hasOne(Etape::class, 'idtournee')->latestOfMany(); // dernière étape
+       return $this->hasOne(Etape::class, 'idtournee')->latestOfMany(); 
    }
 
     public function camionActif()
     {
         return $this->belongsToMany(Camion::class, 'camionstournees', 'idtournee', 'idcamion')
             ->withPivot('statut')
-            ->wherePivot('statut', 10); // Seulement le camion actifs
+            ->wherePivot('statut', 10);  
     }
 
     public function chauffeurActif()
     {
         return $this->belongsToMany(Chauffeur::class, 'chauffeurstournee', 'idtournee', 'idchauffeur')
             ->withPivot('statut')
-            ->wherePivot('statut', 10); // Seulement le camion actifs
+            ->wherePivot('statut', 10); 
     }
 
 }
