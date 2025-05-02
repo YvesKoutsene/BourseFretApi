@@ -10,7 +10,6 @@ use App\Http\Controllers\Transporteur\EtapeTransController;
 use App\Http\Controllers\Transporteur\FretTransController;
 use App\Http\Controllers\Transporteur\TourneeTransController;
 
-
 /*
 |--------------------------------------------------------------------------
 | API Routes

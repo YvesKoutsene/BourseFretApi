@@ -46,8 +46,8 @@ class EtapeTransController extends Controller
             'keyetape'     => Str::uuid()->toString(),
             'position'     => $validated['position'],
             'dateposition' => now(),
+            'latitude'    => $validated['latitude'], 
             'longitude'    => $validated['longitude'],
-            'laltitude'    => $validated['latitude'], 
             'statut'       => 10,
             'idtournee'    => $tournee->id,
         ]);
