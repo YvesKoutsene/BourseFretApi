@@ -66,8 +66,11 @@ Route::middleware('auth:sanctum')->group(function () {
 // Route de renvoie des frets attribués 
 Route::get('/v1/trans/frets-attribues/{key}', [FretTransController::class, 'index']);
 
-// Route de renvoie des tournées d'un fret
+// Route de renvoie de toutes les tournées d'un fret
 Route::get('/v1/trans/tournees-fret/{key}', [TourneeTransController::class, 'index']);
+
+// Route de renvoie des tournées en cours d'un fret
+Route::get('/v1/trans/tournees-fret/en-cours/{key}', [TourneeTransController::class, 'index2']);
 
 // Route de récupération des camions et chauffeurs libre d'un transporteur
 Route::get('/v1/trans/disponibilites/{key}', [TourneeTransController::class, 'getDisponibilitesTransporteur']);
@@ -81,3 +84,5 @@ Route::post('/v1/trans/tournees-fret/demarrer/{key}', [EtapeTransController::cla
 // Route pour clôturer une tournée
 Route::post('/v1/trans/tournees-fret/cloturer/{key}', [EtapeTransController::class, 'cloturerTournee']); 
 
+// Route pour renvoyer les étapes d'une tournée
+Route::get('/v1/trans/tournees-fret/etapes/{key}', [EtapeTransController::class, 'index']); 

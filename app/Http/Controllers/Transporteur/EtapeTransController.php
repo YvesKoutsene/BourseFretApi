@@ -116,6 +116,29 @@ class EtapeTransController extends Controller
         ], 200);
     }
 
+    // Fonction permattant d'afficher les étapes d'une tournée
+    public function index(Request $request, $key){
 
-    
+        if (!$request->user()) {
+            return response()->json(null, 401); // Non authentifié
+        }
+
+        $tournee = Tournee::where('keytournee', $key)->first();
+
+        if (!$tournee) {
+            return response()->json(null, 404); // Tournée non trouvée
+        }
+        
+        // Récupérer toutes les étapes de la tournée 
+        $etapes = $tournee->etapes()->get();
+
+        return response()->json([
+            'etapes' => $etapes,
+        ], 200); // Ok
+
+
+    }
+
+
+
 }

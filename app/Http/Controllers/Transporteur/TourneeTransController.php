@@ -42,6 +42,33 @@ class TourneeTransController extends Controller
         ], 200); // Ok
     }
 
+    // Fonction pour renvoyer les tournées en cours d'un fret
+    public function index2(Request $request, $key)
+    {
+        // Vérifiez si l'utilisateur est authentifié (commenté ici)
+        if (!$request->user()) {
+        return response()->json(null, 401); // Non authentifié
+        }
+
+        // Récupérer le fret en utilisant le keyfret
+        $fret = Fret::with(['lieuchargement', 'lieudechargement'])->where('keyfret', $key)->first();
+
+        if (!$fret) {
+            return response()->json(null, 404); // Non trouvé
+        }
+
+        // Récupérer toutes les tournées associées au fret        
+        $tournees = Tournee::with(['lieuDepart', 'lieuArrivee', 'derniereEtape', 'camionActif', 'chauffeurActif'])
+            ->where('idfret', $fret->id)
+            ->where('statut', 20)
+            ->get();
+
+        // Retourner les données sous forme de JSON
+        return response()->json([
+            'tournees' => $tournees, // Peut être vide
+            'fret' => $fret
+        ], 200); // Ok
+    }
 
     // Fonction permettant de renvoyer les camions et chauffeurs disponible pour un transporteur
     public function getDisponibilitesTransporteur(Request $request, $key)
@@ -167,7 +194,6 @@ class TourneeTransController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Tournée créée avec succès',
             'tournee' => $tournee
         ], 201);
     }
