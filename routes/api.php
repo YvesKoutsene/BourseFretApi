@@ -86,3 +86,6 @@ Route::post('/v1/trans/tournees-fret/cloturer/{key}', [EtapeTransController::cla
 
 // Route pour renvoyer les étapes d'une tournée
 Route::get('/v1/trans/tournees-fret/etapes/{key}', [EtapeTransController::class, 'index']); 
+
+// Route pour ajouter les étapes des tournées en cours d'un fret
+Route::post('/v1/trans/tournees-fret/etapes/store', [EtapeTransController::class, 'store']); 

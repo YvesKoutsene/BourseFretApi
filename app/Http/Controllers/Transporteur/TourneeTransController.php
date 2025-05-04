@@ -37,7 +37,7 @@ class TourneeTransController extends Controller
 
         // Retourner les données sous forme de JSON
         return response()->json([
-            'tournees' => $tournees, // Peut être vide
+            'tournees' => $tournees, 
             'fret' => $fret
         ], 200); // Ok
     }
@@ -65,8 +65,7 @@ class TourneeTransController extends Controller
 
         // Retourner les données sous forme de JSON
         return response()->json([
-            'tournees' => $tournees, // Peut être vide
-            'fret' => $fret
+            'tournees' => $tournees, 
         ], 200); // Ok
     }
 

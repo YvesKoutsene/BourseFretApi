@@ -32,4 +32,5 @@ class FretTransController extends Controller
             'frets' => $frets
         ], 200); // Ok
     }
+    
 }

@@ -134,10 +134,74 @@ class EtapeTransController extends Controller
 
         return response()->json([
             'etapes' => $etapes,
+            'tournee' => $tournee,
         ], 200); // Ok
 
-
     }
+
+    // Fonction permettant d'enrégistrer les étapes des tournées en cours d'un fret
+    public function store(Request $request)
+    {
+        // Vérifiez si l'utilisateur est authentifié
+        if (!$request->user()) {
+            return response()->json(['message' => 'Non authentifié.'], 401);
+        }
+
+        // Validation de base du tableau principal (structure minimale)
+        $validated = $request->validate([
+            'etapes' => 'required|array|min:1',
+            'etapes.*.tournee_id' => 'required|integer',
+            'etapes.*.etapes' => 'nullable|array',
+        ]);
+
+        $etapesCreees = [];
+
+        foreach ($request->etapes as $group) {
+            $tourneeId = $group['tournee_id'];
+            $tournee = Tournee::find($tourneeId);
+
+            if (!$tournee) {
+                return response()->json(['message' => "Tournée ou une des tournées introuvable."], 404);
+            }
+
+            if ((int)$tournee->statut !== 20) {
+                return response()->json(['message' => "Tournée ou une des tournées n’est pas en cours."], 400);
+            }
+
+            $etapes = $group['etapes'] ?? [];
+
+            // Si des étapes sont présentes, on valide leur intégrité complète
+            foreach ($etapes as $index => $etapeData) {
+                if (
+                    !isset($etapeData['position']) ||
+                    !isset($etapeData['latitude']) ||
+                    !isset($etapeData['longitude'])
+                ) {
+                    return response()->json([
+                        'message' => "Étape partielle trouvée pour la tournée ID $tourneeId à l’index $index. Toutes les informations (position, latitude, longitude) sont requises."
+                    ], 422);
+                }
+            }
+
+            // Si tout est OK, on les enregistre
+            foreach ($etapes as $etapeData) {
+                $etapesCreees[] = Etape::create([
+                    'idtournee'    => $tourneeId,
+                    'keyetape'      => Str::uuid()->toString(),
+                    'position'      => $etapeData['position'],
+                    'latitude'      => $etapeData['latitude'],
+                    'longitude'     => $etapeData['longitude'],
+                    'dateposition'  => now(),
+                    'statut'        => 10,
+                ]);
+            }
+        }
+
+        return response()->json([
+            'etapes' => $etapesCreees
+        ], 201); // Ok
+    }
+
 
 
 
