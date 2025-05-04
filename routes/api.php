@@ -58,34 +58,37 @@ Route::get('/v1/pays/index', [AuthController::class, 'index']);
 // Route de connexion
 Route::post('/v1/trans/connexion', [AuthTransController::class, 'connexion']);
 
-// Route de déconnexion
 Route::middleware('auth:sanctum')->group(function () {
+    // Route de déconnexion
     Route::post('/v1/trans/deconnexion', [AuthTransController::class, 'deconnexion']);
-});
 
-// Route de renvoie des frets attribués 
-Route::get('/v1/trans/frets-attribues/{key}', [FretTransController::class, 'index']);
+    // Route de renvoie des frets attribués 
+    Route::get('/v1/trans/frets-attribues/{key}', [FretTransController::class, 'index']);
+
+    // Route de renvoie de toutes les tournées d'un fret
+    //Route::get('/v1/trans/tournees-fret/{key}', [TourneeTransController::class, 'index']);
+
+    // Route de renvoie des tournées en cours d'un fret
+    Route::get('/v1/trans/tournees-fret/en-cours/{key}', [TourneeTransController::class, 'index2']);
+
+    // Route de récupération des camions et chauffeurs libre d'un transporteur
+    Route::get('/v1/trans/disponibilites/{key}', [TourneeTransController::class, 'getDisponibilitesTransporteur']);
+
+    // Route pour la création de tournées d'un fret
+    Route::post('/v1/trans/tournees-fret/store/{key}', [TourneeTransController::class, 'store']);
+
+    // Route pour démarrer une tournée
+    Route::post('/v1/trans/tournees-fret/demarrer/{key}', [EtapeTransController::class, 'demarrerTournee']);
+
+    // Route pour clôturer une tournée
+    Route::post('/v1/trans/tournees-fret/cloturer/{key}', [EtapeTransController::class, 'cloturerTournee']);
+
+    // Route pour renvoyer les étapes d'une tournée
+    Route::get('/v1/trans/tournees-fret/etapes/index/{key}', [EtapeTransController::class, 'index']);
+
+    // Route pour ajouter les étapes des tournées en cours d'un fret
+    Route::post('/v1/trans/tournees-fret/etapes/store', [EtapeTransController::class, 'store']);
+});
 
 // Route de renvoie de toutes les tournées d'un fret
 Route::get('/v1/trans/tournees-fret/{key}', [TourneeTransController::class, 'index']);
-
-// Route de renvoie des tournées en cours d'un fret
-Route::get('/v1/trans/tournees-fret/en-cours/{key}', [TourneeTransController::class, 'index2']);
-
-// Route de récupération des camions et chauffeurs libre d'un transporteur
-Route::get('/v1/trans/disponibilites/{key}', [TourneeTransController::class, 'getDisponibilitesTransporteur']);
-
-// Route pour la création de tournées d'un fret
-Route::post('/v1/trans/tournees-fret/store/{key}', [TourneeTransController::class, 'store']);
-
-// Route pour démarrer une tournée
-Route::post('/v1/trans/tournees-fret/demarrer/{key}', [EtapeTransController::class, 'demarrerTournee']); 
-
-// Route pour clôturer une tournée
-Route::post('/v1/trans/tournees-fret/cloturer/{key}', [EtapeTransController::class, 'cloturerTournee']); 
-
-// Route pour renvoyer les étapes d'une tournée
-Route::get('/v1/trans/tournees-fret/etapes/{key}', [EtapeTransController::class, 'index']); 
-
-// Route pour ajouter les étapes des tournées en cours d'un fret
-Route::post('/v1/trans/tournees-fret/etapes/store', [EtapeTransController::class, 'store']); 
