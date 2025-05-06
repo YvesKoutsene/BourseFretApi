@@ -163,6 +163,7 @@ class TourneeTransController extends Controller
         $tournee->poids = $request->poids;
         $tournee->numerobl = $request->numerobl;
         $tournee->numeroconteneur = $request->numeroconteneur;
+        $tournee->statut = 10;
         $tournee->save();
 
         // Étape 6 : Mettre à jour les statuts

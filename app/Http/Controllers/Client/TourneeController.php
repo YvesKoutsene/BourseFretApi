@@ -95,7 +95,7 @@ class TourneeController extends Controller
 
 
     // Fonction de lecture d'une tournee
-    public function show(Request $request, $key)
+    /*public function show(Request $request, $key)
     {
         if (!$request->user()) {
             return response()->json(null, 401); // Non authentifié
@@ -109,6 +109,25 @@ class TourneeController extends Controller
             return response()->json(null, 404); // Tournee pas trouvée
         }
         // 404 même si le user ne met pas le keytournee
+
+        return response()->json($tournee, 200); // Ok
+    }*/
+
+    public function show(Request $request, $key)
+    {
+        if (!$request->user()) {
+            return response()->json(null, 401); // Non authentifié
+        }
+
+        $tournee = Tournee::with(['fret', 'camionActif'])
+        ->where('keytournee', $key)
+        ->first();
+
+        if (!$tournee) {
+            return response()->json(null, 404);
+        }
+
+        $tournee->etapes = $tournee->etapes()->orderByDesc('dateposition')->get();
 
         return response()->json($tournee, 200); // Ok
     }
