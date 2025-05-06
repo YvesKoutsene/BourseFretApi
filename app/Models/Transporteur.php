@@ -25,12 +25,13 @@ class Transporteur extends Model
         'updatedby'
     ];
 
-
     public function fretsAttribues()
     {
         return $this->belongsToMany(Fret::class, 'attributionfret', 'idtransporteur', 'idfret')
             ->where('attributionfret.statut', 10)
-            ->whereIn('fret.statut', [30, 40, 50])
+            ->whereIn('fret.statut', [40, 50])
             ->with(['lieuchargement', 'lieudechargement', 'typemarchandise', 'typevehicule']);
     }
+
+
 }

@@ -10,7 +10,7 @@ use App\Models\Client;
 
 class TourneeController extends Controller
 {
-    // Fonction permettant de ramener les tournées des frets d'un client
+    // Fonction permettant de ramener les tournées d'un fret
     /*public function index(Request $request, $key)
     {
         if (!$request->user()) {
@@ -74,7 +74,7 @@ class TourneeController extends Controller
         $search = $request->input('q');
 
         // Récupérer toutes les tournées associées au fret
-        $tournees = Tournee::with(['derniereEtape', 'camionActif'])
+        $tournees = Tournee::with(['fret','derniereEtape', 'camionActif'])
             ->where('idfret', $fret->id);
 
         if ($search) {

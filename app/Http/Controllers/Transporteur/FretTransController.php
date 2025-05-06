@@ -33,4 +33,30 @@ class FretTransController extends Controller
         ], 200); // Ok
     }
     
+    // Fonction permettant d'afficher les détails d'un fret
+    public function show(Request $request, $key)
+    {
+        if (!$request->user()) {
+            return response()->json(null, 401); // Non authentifié
+        }
+
+        $fret = Fret::with([
+            'lieuchargement',
+            'lieudechargement',
+            'typemarchandise',
+            'parametresvehicule',
+            'typevehicule',
+        ])->where('keyfret', $key)->first();
+
+        if (!$fret) {
+            return response()->json(null, 404); // Fret non trouvé
+        }
+        // 404 même si le user ne met pas le keyfret
+
+        return response()->json([
+            'fret' => $fret,
+        ], 200); // Ok
+    }
+
+
 }

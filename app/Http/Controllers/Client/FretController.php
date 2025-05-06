@@ -24,7 +24,9 @@ class FretController extends Controller
         }
 
         $query = Fret::where('idclient', $client->id)
-            ->whereNotIn('statut', [0, 9, 10]); // Exclure les statuts 0 et 9
+            //->whereNotIn('statut', [0, 9, 10]); // Exclure les statuts 0 et 9
+            ->whereIn('statut', [30, 40, 50]); 
+
 
         // Recherche par numéro fret ou numero dossier
         if ($request->filled('q')) {

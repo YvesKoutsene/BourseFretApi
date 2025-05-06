@@ -65,6 +65,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route de renvoie des frets attribués 
     Route::get('/v1/trans/frets-attribues/{key}', [FretTransController::class, 'index']);
 
+    // Route de renvoie des détails d'un fret
+    Route::get('/v1/trans/frets-attribues/show/{key}', [FretTransController::class, 'show']);
+
     // Route de renvoie de toutes les tournées d'un fret
     //Route::get('/v1/trans/tournees-fret/{key}', [TourneeTransController::class, 'index']);
 

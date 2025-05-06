@@ -35,7 +35,6 @@ class TourneeTransController extends Controller
             ->where('idfret', $fret->id)
             ->get();
 
-        // Retourner les données sous forme de JSON
         return response()->json([
             'tournees' => $tournees, 
             'fret' => $fret
