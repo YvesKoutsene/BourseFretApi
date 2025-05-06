@@ -60,7 +60,7 @@ class EtapeTransController extends Controller
     }
 
     // Fonction permettant de clôturer une tournée 
-    public function cloturerTournee(Request $request, $key)
+    /*public function cloturerTournee(Request $request, $key)
     {
         if (!$request->user()) {
             return response()->json(null, 401); // Non authentifié
@@ -116,6 +116,81 @@ class EtapeTransController extends Controller
         return response()->json([
             'tournee' => $tournee,
         ], 200);
+    }*/
+
+    public function cloturerTournee(Request $request, $key)
+    {
+    if (!$request->user()) {
+        return response()->json(null, 401); // Non authentifié
+    }
+
+    $validated = $request->validate([
+        'position' => 'required|string|max:255',
+        'latitude' => 'required|numeric',
+        'longitude' => 'required|numeric',
+    ]);
+
+    $tournee = Tournee::with('fret')->where('keytournee', $key)->first();
+
+    if (!$tournee) {
+        return response()->json(null, 404); // Tournée non trouvée
+    }
+
+    if ($tournee->statut !== 20) {
+        return response()->json([
+            'message' => 'Cette tournée est déjà clôturée ou n’est pas en cours.',
+        ], 400);
+    }
+
+    // Création de la dernière étape
+    Etape::create([
+        'keyetape'     => Str::uuid()->toString(),
+        'position'     => $validated['position'],
+        'dateposition' => now(),
+        'latitude'     => $validated['latitude'],
+        'longitude'    => $validated['longitude'],
+        'statut'       => 10,
+        'idtournee'    => $tournee->id,
+    ]);
+
+    // Mise à jour du statut de la tournée
+    $tournee->statut = 30; // Clôturée
+    $tournee->save();
+
+    // Libération du camion
+    $camion = $tournee->camionActif()->first();
+    if ($camion) {
+        $camion->statut = 10;
+        $camion->save();
+    }
+
+    // Libération du chauffeur
+    $chauffeur = $tournee->chauffeurActif()->first();
+    if ($chauffeur) {
+        $chauffeur->statut = 10;
+        $chauffeur->save();
+    }
+
+    // Vérification du fret
+    $fret = $tournee->fret;
+    if ($fret) {
+        $nombreTourneesAttendu = $fret->nombrecamions; 
+        $nombreTourneesReelles = $fret->tournees()->count();
+        $nombreTourneesCloturees = $fret->tournees()->where('statut', 30)->count();
+
+        if (
+            $nombreTourneesReelles === $nombreTourneesAttendu &&
+            $nombreTourneesCloturees === $nombreTourneesAttendu
+        ) {
+           
+            $fret->statut = 50; // Livré
+            $fret->save();
+        }
+    }
+
+    return response()->json([
+        'tournee' => $tournee,
+    ], 200);
     }
 
     // Fonction permattant d'afficher les étapes d'une tournée

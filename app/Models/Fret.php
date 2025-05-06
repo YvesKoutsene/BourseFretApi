@@ -48,4 +48,10 @@ class Fret extends Model
         return $this->belongsTo(Client::class, 'idclient');
    }
 
+   //New By Jyl
+   public function tournees()
+   {
+    return $this->hasMany(Tournee::class, 'idfret');
+   }
+
 }

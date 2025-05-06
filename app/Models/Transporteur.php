@@ -29,6 +29,7 @@ class Transporteur extends Model
     {
         return $this->belongsToMany(Fret::class, 'attributionfret', 'idtransporteur', 'idfret')
             ->where('attributionfret.statut', 10)
+            ->orderByDesc('attributionfret.created_at')
             ->whereIn('fret.statut', [40, 50])
             ->with(['lieuchargement', 'lieudechargement', 'typemarchandise', 'typevehicule']);
     }
