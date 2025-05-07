@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Transporteur;
+namespace App\Http\Controllers\V1\Transporteur;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class EtapeTransController extends Controller
+class EtapeController extends Controller
 {
     // Fonction permettant de démarrer une tournée
     public function demarrerTournee(Request $request, $key)
@@ -60,64 +60,6 @@ class EtapeTransController extends Controller
     }
 
     // Fonction permettant de clôturer une tournée 
-    /*public function cloturerTournee(Request $request, $key)
-    {
-        if (!$request->user()) {
-            return response()->json(null, 401); // Non authentifié
-        }
-
-        $validated = $request->validate([
-            'position' => 'required|string|max:255',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-        ]);
-
-        $tournee = Tournee::where('keytournee', $key)->first();
-
-        if (!$tournee) {
-            return response()->json(null, 404); // Tournée non trouvée
-        }
-
-        if ($tournee->statut !== 20) {
-            return response()->json([
-                'message' => 'Cette tournée est déjà clôturée ou n’est pas en cours.',
-            ], 400);
-        }
-
-        // Création de la dernière étape
-        Etape::create([
-            'keyetape'     => Str::uuid()->toString(),
-            'position'     => $validated['position'],
-            'dateposition' => now(),
-            'latitude'     => $validated['latitude'],
-            'longitude'    => $validated['longitude'],
-            'statut'       => 10,
-            'idtournee'    => $tournee->id,
-        ]);
-
-        // Changement du statut de la tournée à 30 (clôturée)
-        $tournee->statut = 30;
-        $tournee->save();
-
-        // Récupération du camion actif via la relation pivot (statut 10)
-        $camion = $tournee->camionActif()->first();
-        if ($camion) {
-            $camion->statut = 10;
-            $camion->save();
-        }
-
-        // Récupération du chauffeur actif via la relation pivot (statut 10)
-        $chauffeur = $tournee->chauffeurActif()->first();
-        if ($chauffeur) {
-            $chauffeur->statut = 10;
-            $chauffeur->save();
-        }
-
-        return response()->json([
-            'tournee' => $tournee,
-        ], 200);
-    }*/
-
     public function cloturerTournee(Request $request, $key)
     {
     if (!$request->user()) {
@@ -171,7 +113,7 @@ class EtapeTransController extends Controller
         $chauffeur->save();
     }
 
-    // Vérification du fret
+    // Vérification du fret pour le livrer
     $fret = $tournee->fret;
     if ($fret) {
         $nombreTourneesAttendu = $fret->nombrecamions; 
@@ -183,7 +125,7 @@ class EtapeTransController extends Controller
             $nombreTourneesCloturees === $nombreTourneesAttendu
         ) {
            
-            $fret->statut = 50; // Livré
+            $fret->statut = 50; 
             $fret->save();
         }
     }
