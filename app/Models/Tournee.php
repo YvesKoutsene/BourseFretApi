@@ -11,7 +11,7 @@ class Tournee extends Model
     protected $table = 'tournee';
 
     protected $fillable = [
-        'keytournee', 'datedepart', 'datearrivee', 'poids', 'numerobl', 'numeroconteneur',
+        'keytournee', 'numerotournee','datedepart', 'datearrivee', 'poids', 'numerobl', 'numeroconteneur',
         'idfret', 'idlieudepart', 'idlieuarrivee', 'statut', 'createdby', 'updatedby'
    ];
 

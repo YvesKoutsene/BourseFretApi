@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('tournee', function (Blueprint $table) {
             $table->id();
             $table->string('keytournee')->unique();
+            $table->string('numerotournee')->unique();
             $table->dateTime('datedepart');
             $table->dateTime('datearrivee');
             $table->double('poids');

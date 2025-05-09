@@ -56,12 +56,11 @@ Route::prefix('v1')->group(function () {
 
     });
 
-
 });
 
 // Pour la version 01 du transporteur
-Route::prefix('v1/trans')->group(function () {
-    Route::post('/trans/connexion', [AuthTransController::class, 'connexion']);
+Route::prefix('/v1/trans')->group(function () {
+    Route::post('/connexion', [AuthTransController::class, 'connexion']);
 
     Route::middleware('auth:sanctum')->group(function () {
         // Route de déconnexion
@@ -74,7 +73,7 @@ Route::prefix('v1/trans')->group(function () {
         Route::get('/frets-attribues/show/{key}', [FretTransController::class, 'show']);
 
         // Route de renvoie de toutes les tournées d'un fret
-        //Route::get('/tournees-fret/{key}', [TourneeTransController::class, 'index']);
+        Route::get('/tournees-fret/{key}', [TourneeTransController::class, 'index']);
 
         // Route de renvoie des tournées en cours d'un fret
         Route::get('/tournees-fret/en-cours/{key}', [TourneeTransController::class, 'index2']);
@@ -97,8 +96,5 @@ Route::prefix('v1/trans')->group(function () {
         // Route pour ajouter les étapes des tournées en cours d'un fret
         Route::post('/tournees-fret/etapes/store', [EtapeController::class, 'store']);
     });
-
-    // Route de renvoie de toutes les tournées d'un fret
-    Route::get('/tournees-fret/{key}', [TourneeTransController::class, 'index']);
    
 });

@@ -18,10 +18,10 @@ class TourneeTransController extends Controller
     // Fonction permettant de renvoyer les tournées d'un fret
     public function index(Request $request, $key)
     {
-        // Vérifiez si l'utilisateur est authentifié (commenté ici)
-        /*if (!$request->user()) {
+        // Vérifiez si l'utilisateur est authentifié
+        if (!$request->user()) {
         return response()->json(null, 401); // Non authentifié
-        }*/
+        }
 
         // Récupérer le fret en utilisant le keyfret
         $fret = Fret::with(['lieuchargement', 'lieudechargement'])->where('keyfret', $key)->first();
@@ -100,7 +100,6 @@ class TourneeTransController extends Controller
     // Fonction d'enrégistrement d'une tournée d'un fret
     public function store(Request $request, $key)
     {
-
         if (!$request->user()) {
             return response()->json(null, 401); // Non authentifié
         }
@@ -124,12 +123,6 @@ class TourneeTransController extends Controller
         ]);
 
         // Étape 2 : Vérifier le nombre maximal de tournées et les dates
-        // Validation des dates
-        $today = now()->toDateString(); 
-        if ($request->datedepart < $today || $request->datearrivee < $today) {
-            return response()->json(['message' => 'Les dates doivent être supérieures ou égales à aujourd\'hui.'], 400);
-        }
-
         if ($request->datedepart > $request->datearrivee) {
             return response()->json(['message' => 'La date de départ doit être inférieure ou égale à la date d\'arrivée.'], 400);
         }
@@ -152,48 +145,58 @@ class TourneeTransController extends Controller
             return response()->json(['message' => 'Chauffeur non disponible'], 400);
         }
 
-        // Étape 5 : Créer la tournée
-        $tournee = new Tournee();
-        $tournee->keytournee = Str::uuid()->toString();
-        $tournee->idfret = $fret->id;
-        $tournee->idlieudepart = $request->idlieudepart;
-        $tournee->idlieuarrivee = $request->idlieuarrivee;
-        $tournee->datedepart = $request->datedepart;
-        $tournee->datearrivee = $request->datearrivee;
-        $tournee->poids = $request->poids;
-        $tournee->numerobl = $request->numerobl;
-        $tournee->numeroconteneur = $request->numeroconteneur;
-        $tournee->statut = 10;
-        $tournee->save();
+        DB::beginTransaction();
 
-        // Étape 6 : Mettre à jour les statuts
-        $camion->statut = 20;
-        $camion->save();
+        try {
+            // Étape 5 : Créer la tournée
+            $tournee = new Tournee();
+            $tournee->keytournee = Str::uuid()->toString();
+            $tournee->idfret = $fret->id;
+            $tournee->idlieudepart = $request->idlieudepart;
+            $tournee->idlieuarrivee = $request->idlieuarrivee;
+            $tournee->datedepart = $request->datedepart;
+            $tournee->datearrivee = $request->datearrivee;
+            $tournee->poids = $request->poids;
+            $tournee->numerobl = $request->numerobl;
+            $tournee->numeroconteneur = $request->numeroconteneur;
+            $tournee->statut = 10;
+            $tournee->save();
 
-        $chauffeur->statut = 20;
-        $chauffeur->save();
+            // Étape 6 : Mettre à jour les statuts
+            $camion->statut = 20;
+            $camion->save();
 
-        // Étape 7 : Remplir les tables pivot avec clés uniques
-        DB::table('camionstournees')->insert([
-            'keycamionstournee' => Str::uuid()->toString(),
-            'idcamion' => $camion->id,
-            'idtournee' => $tournee->id,
-            'statut' => 10,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+            $chauffeur->statut = 20;
+            $chauffeur->save();
 
-        DB::table('chauffeurstournee')->insert([
-            'keychauffeurstournee' => Str::uuid()->toString(),
-            'idchauffeur' => $chauffeur->id,
-            'idtournee' => $tournee->id,
-            'statut' => 10,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+            // Étape 7 : Remplir les tables pivot avec clés uniques
+            DB::table('camionstournees')->insert([
+                'keycamionstournee' => Str::uuid()->toString(),
+                'idcamion' => $camion->id,
+                'idtournee' => $tournee->id,
+                'statut' => 10,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-        return response()->json([
-            'tournee' => $tournee
-        ], 201);
+            DB::table('chauffeurstournee')->insert([
+                'keychauffeurstournee' => Str::uuid()->toString(),
+                'idchauffeur' => $chauffeur->id,
+                'idtournee' => $tournee->id,
+                'statut' => 10,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'tournee' => $tournee
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Erreur lors de la création de la tournée: ' . $e->getMessage()], 500);
+        }
     }
+
 }

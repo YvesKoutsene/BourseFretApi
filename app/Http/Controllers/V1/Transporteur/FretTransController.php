@@ -22,17 +22,21 @@ class FretTransController extends Controller
             return response()->json(null, 404); // Transporteur non trouvé
         }
 
-        // Puis on récupère ses frets attribués actifs
-        $frets = $transporteur->fretsAttribues()->get();
+        // Récupérer les frets attribués au transporteur avec le nombre de tournées
+        $frets = $transporteur->fretsAttribues()
+            ->withCount('tournees') // Compte le nombre de tournées pour chaque fret
+            ->get();
 
         if ($frets->isEmpty()) {
             return response()->json(null, 204); // No content
         }
+
         return response()->json([
             'frets' => $frets
         ], 200); // Ok
     }
-    
+
+
     // Fonction permettant d'afficher les détails d'un fret
     public function show(Request $request, $key)
     {
@@ -57,6 +61,4 @@ class FretTransController extends Controller
             'fret' => $fret,
         ], 200); // Ok
     }
-
-
 }
