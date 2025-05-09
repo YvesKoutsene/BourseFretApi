@@ -24,7 +24,7 @@ class FretTransController extends Controller
 
         // Récupérer les frets attribués au transporteur avec le nombre de tournées
         $frets = $transporteur->fretsAttribues()
-            ->withCount('tournees') // Compte le nombre de tournées pour chaque fret
+            ->withCount('tournees')
             ->get();
 
         if ($frets->isEmpty()) {

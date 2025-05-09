@@ -150,6 +150,13 @@ class TourneeTransController extends Controller
         try {
             // Étape 5 : Créer la tournée
             $tournee = new Tournee();
+
+            // Génération du numerotournee
+            $prefix = strtoupper(strrev(substr($fret->numerofret, 0, 3)));
+            $now = now();
+            $numerotournee = $prefix . $now->format('Y') . '-' . $now->format('mdHis');
+
+            $tournee->numerotournee = $numerotournee;
             $tournee->keytournee = Str::uuid()->toString();
             $tournee->idfret = $fret->id;
             $tournee->idlieudepart = $request->idlieudepart;
@@ -190,9 +197,17 @@ class TourneeTransController extends Controller
 
             DB::commit();
 
+            // Logique pour le nouveau controle de tournée
+            $nombreTournees = Tournee::where('idfret', $fret->id)->count();
+            $limite = $fret->nombrecamions;
+
             return response()->json([
-                'tournee' => $tournee
+                'tournee' => $tournee,
+                'tournees_total' => $nombreTournees,
+                'limite' => $limite,
+                'keyfret' => $fret->keyfret,
             ], 201);
+
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['message' => 'Erreur lors de la création de la tournée: ' . $e->getMessage()], 500);
