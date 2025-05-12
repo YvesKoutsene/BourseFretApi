@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Pour la version 01 du client
 Route::prefix('v1')->group(function () {
     // Route de connexion
-    Route::post('/v1/connexion', [AuthController::class, 'connexion']);
+    Route::post('/connexion', [AuthController::class, 'connexion']);
 
     Route::middleware('auth:sanctum')->group(function () {
 
@@ -38,6 +38,9 @@ Route::prefix('v1')->group(function () {
 
     // Route de renvoie de la liste des pays
     Route::get('/pays/index', [AuthController::class, 'index']);
+
+    // Route pour la suppression logique de compte
+    Route::delete('/user/delete/{key}', [AuthController::class, 'destroy']);
 
     // Route de mise à jour de l'utilisateur
     Route::put('/user/update/{key}', [AuthController::class, 'update']);

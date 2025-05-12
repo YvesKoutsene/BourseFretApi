@@ -10,7 +10,6 @@ class Transporteur extends Model
     use HasFactory;
     protected $table = 'transporteur';
 
-
     protected $fillable = [
         'keytransporteur',
         'nom',

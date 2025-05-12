@@ -163,4 +163,45 @@ class AuthController extends Controller
             'user' => $user->makeHidden(['motdepasse', 'access_token', 'createdby', 'updatedby']),
         ], 200);
     }
+
+    // Fonction permettant de supprimer un compte (Suppression logique)
+    public function destroy(Request $request, $key)
+    {
+        if (!$request->user()) {
+            return response()->json(null, 401); // Non authentifié
+        }
+
+        $user = Utilisateur::where('keyutilisateur', $key)->first();
+
+        if (!$user) {
+            return response()->json(null, 404); // Utilisateur non trouvé
+        }
+
+        $authUser = Auth::user();
+
+        // Vérifie que le compte appartient bien à l'utilisateur connecté
+        if ($authUser->keyutilisateur !== $user->keyutilisateur) {
+            return response()->json(null, 403); // Accès interdit
+        }
+
+        // Vérifie que c'est bien un client
+        if (!$user->client) {
+            return response()->json([
+                'message' => 'Seuls les clients peuvent supprimer leur compte.'
+            ], 403);
+        }
+
+        $user->statut = 0; 
+        $user->save();
+
+        // Optionnel : désactiver aussi le compte client s'il existe
+        if ($user->client && is_null($user->createdby)) {
+            $user->client->update(['statut' => 0]);
+        }
+
+        // Déconnexion : suppression des tokens Sanctum
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json(null, 200);
+    }
 }
