@@ -33,7 +33,7 @@ class TourneeController extends Controller
         // Récupérer toutes les tournées associées au fret
         $tournees = Tournee::with(['fret','derniereEtape', 'camionActif'])
             ->where('idfret', $fret->id)
-            ->orderByDesc('created_at')->get();
+            ->orderByDesc('created_at');
 
         if ($search) {
             $tournees = $tournees->where(function ($query) use ($search) {

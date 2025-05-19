@@ -53,8 +53,8 @@ class AuthController extends Controller
             'user'  => $user->makeHidden([
                 'motdepasse',
                 'access_token',
-                'createdby',
-                'updatedby'
+                //'createdby',
+                //'updatedby'
             ]),
         ], 200); // Ok
     }
@@ -202,6 +202,6 @@ class AuthController extends Controller
         // Déconnexion : suppression des tokens Sanctum
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(null, 200);
+        return response()->json(null, 200); // Ok
     }
 }

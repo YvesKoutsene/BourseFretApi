@@ -62,7 +62,7 @@ Route::prefix('v1')->group(function () {
 });
 
 // Pour la version 01 du transporteur
-Route::prefix('/v1/trans')->group(function () {
+Route::prefix('v1/trans')->group(function () {
     Route::post('/connexion', [AuthTransController::class, 'connexion']);
 
     Route::middleware('auth:sanctum')->group(function () {
