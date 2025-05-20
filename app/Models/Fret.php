@@ -12,46 +12,74 @@ class Fret extends Model
     protected $table = 'fret';
 
     protected $fillable = [
-        'keyfret', 'raisonannulation', 'jourchargement', 'jourdechargement', 'naturemarchandise', 'poidsmarchandise',
-        'poidsrestant', 'nombreconteneurs', 'nombrecamions', 'commentaire', 'boursepulication', 'debutpublication',
-        'finpublication', 'numerodossier', 'isdemande', 'documentsupplementaire', 'numerofret', 'photofret', 'idlieuchargement',
-        'idlieudechargement', 'idclient', 'idparametresvehicule', 'idtypevehicule', 'idtypemarchandise','statut', 'createdby', 'updatedby'
-   ];
+        'keyfret',
+        'raisonannulation',
+        'jourchargement',
+        'jourdechargement',
+        'naturemarchandise',
+        'poidsmarchandise',
+        'poidsrestant',
+        'nombreconteneurs',
+        'nombrecamions',
+        'commentaire',
+        'boursepulication',
+        'debutpublication',
+        'finpublication',
+        'numerodossier',
+        'isdemande',
+        'documentsupplementaire',
+        'numerofret',
+        'photofret',
+        'idlieuchargement',
+        'idlieudechargement',
+        'idclient',
+        'idparametresvehicule',
+        'idtypevehicule',
+        'idtypemarchandise',
+        'statut',
+        'createdby',
+        'updatedby'
+    ];
 
-   public function lieuchargement()
-   {
-       return $this->belongsTo(Lieu::class, 'idlieuchargement');
-   }
+    public function lieuchargement()
+    {
+        return $this->belongsTo(Lieu::class, 'idlieuchargement');
+    }
 
-   public function lieudechargement()
-   {
-       return $this->belongsTo(Lieu::class, 'idlieudechargement');
-   }
+    public function lieudechargement()
+    {
+        return $this->belongsTo(Lieu::class, 'idlieudechargement');
+    }
 
-   public function typemarchandise()
-   {
-       return $this->belongsTo(Typemarchandise::class, 'idtypemarchandise');
-   }
+    public function typemarchandise()
+    {
+        return $this->belongsTo(Typemarchandise::class, 'idtypemarchandise');
+    }
 
-   public function typevehicule()
-   {
+    public function typevehicule()
+    {
         return $this->belongsTo(Typevehicule::class, 'idtypevehicule');
-   }
+    }
 
-   public function parametresvehicule()
-   {
+    public function parametresvehicule()
+    {
         return $this->belongsTo(Parametresvehicules::class, 'idparametresvehicule');
-   }
+    }
 
-   public function client()
-   {
+    public function client()
+    {
         return $this->belongsTo(Client::class, 'idclient');
-   }
+    }
 
-   //New By Jyl
-   public function tournees()
-   {
-    return $this->hasMany(Tournee::class, 'idfret');
-   }
+    //New By Jyl
+    public function tournees()
+    {
+        return $this->hasMany(Tournee::class, 'idfret');
+    }
 
+    public function propositions()
+    {
+        return $this->hasMany(Propositionprix::class, 'idfret');
+    }
+    
 }

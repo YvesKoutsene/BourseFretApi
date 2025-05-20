@@ -53,6 +53,17 @@ class EtapeController extends Controller
             $tournee->statut = 20; // Statut "en cours"
             $tournee->save();
 
+            // Vérification du fret pour le mettre en cours
+            $fret = $tournee->fret;
+            if ($fret) {
+                $nombreTourneesDemarrees = $fret->tournees()->where('statut', 20)->count();
+                // Vérifier s'il n'existe pas de tournée démarrée
+                if ($nombreTourneesDemarrees === 0) {
+                    $fret->statut = 40; // en cours
+                    $fret->save();
+                }
+            }
+
             // Valider la transaction
             DB::commit();
 
@@ -63,7 +74,6 @@ class EtapeController extends Controller
             return response()->json(['message' => 'Erreur lors du démarrage de la tournée: ' . $e->getMessage()], 500);
         }
     }
-
 
     // Fonction permettant de clôturer une tournée 
     public function cloturerTournee(Request $request, $key)

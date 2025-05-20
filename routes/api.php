@@ -98,6 +98,14 @@ Route::prefix('v1/trans')->group(function () {
 
         // Route pour ajouter les étapes des tournées en cours d'un fret
         Route::post('/tournees-fret/etapes/store', [EtapeController::class, 'store']);
+
+        // Route pour récupérer les frets introduits
+        Route::get('/frets-introduits', [FretTransController::class, 'getFretIntroduits']);
+
+        // Route de récupération des propositions d'un fret
+        Route::get('/frets-introduits/propositions-prix/{keyfret}', [FretTransController::class, 'getPropositionsPrix']);
+
+
     });
    
 });

@@ -61,4 +61,53 @@ class FretTransController extends Controller
             'fret' => $fret,
         ], 200); // Ok
     }
+
+    // Pour renvoyer les frets introduits avec leur proposition
+    public function getFretIntroduits(Request $request)
+    {
+        if (!$request->user()) {
+            return response()->json(null, 401); // Non authentifié
+        }
+
+        $frets = Fret::where('statut', 20)
+            ->with(['lieuchargement', 'lieudechargement', 'typemarchandise'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        if ($frets->isEmpty()) {
+            return response()->json(null, 204); // No content
+        }
+
+        return response()->json([
+            'frets' => $frets
+        ], 200); // Ok
+    }
+
+    // Pour renvoyer les propostions de fret
+    public function getPropositionsPrix($keyfret)
+    {
+        if (!auth()->check()) {
+            return response()->json(null, 401);
+        }
+
+        $fret = Fret::where('keyfret', $keyfret)
+            ->with(['propositions' => function ($query) {
+                $query->whereIn('statut', [0, 1, 2]);
+            }])
+            ->first();
+
+        if (!$fret) {
+            return response()->json(null, 404); // Fret introuvable
+        }
+
+        $propositions = $fret->propositions;
+
+        if ($propositions->isEmpty()) {
+            return response()->json(null, 204); // Aucune proposition trouvée
+        }
+
+        return response()->json([
+            'propositions' => $propositions
+        ], 200);
+    }
 }
