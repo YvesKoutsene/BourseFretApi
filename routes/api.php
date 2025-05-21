@@ -105,6 +105,9 @@ Route::prefix('v1/trans')->group(function () {
         // Route de récupération des propositions d'un fret
         Route::get('/frets-introduits/propositions-prix/{keyfret}', [FretTransController::class, 'getPropositionsPrix']);
 
+        // Route de pour proposer un prix pour un fret introduit
+        Route::post('/frets-introduits/propositions-prix/store/{keyfret}', [FretTransController::class, 'storePrix']);
+
 
     });
    

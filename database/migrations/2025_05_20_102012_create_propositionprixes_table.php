@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('keypropositionprix')->unique();
             $table->unsignedBigInteger('idfret');
+            $table->unsignedBigInteger('idtransporteur');
             //$table->unsignedBigInteger('idaffreteur');
             $table->double('prix');
             $table->string('commentaire');
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('updatedby')->nullable();     
             $table->timestamps();
             $table->foreign('idfret')->references('id')->on('fret')->onDelete('restrict');
+            $table->foreign('idtransporteur')->references('id')->on('transporteur')->onDelete('restrict');
             //$table->foreign('idaffreteur')->references('id')->on('affreteur')->onDelete('restrict');
         });
     }

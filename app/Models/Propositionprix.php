@@ -11,7 +11,7 @@ class Propositionprix extends Model
     protected $table = 'propositionprix';
 
     protected $fillable = [
-        'keypropositionprix', 'idfret', 'prix', 'commentaire', 'raisonrefus', 'createdby', 'updatedby', 'statut'
+        'keypropositionprix', 'idfret', 'prix', 'commentaire', 'raisonrefus', 'createdby', 'updatedby', 'statut', 'idtransporteur', 'idaffreteur'
     ];
 
 
