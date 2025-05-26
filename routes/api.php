@@ -9,6 +9,9 @@ use App\Http\Controllers\V1\Transporteur\AuthTransController;
 use App\Http\Controllers\V1\Transporteur\EtapeController;
 use App\Http\Controllers\V1\Transporteur\FretTransController;
 use App\Http\Controllers\V1\Transporteur\TourneeTransController;
+use App\Http\Controllers\V1\Transporteur\CamionController;
+use App\Http\Controllers\V1\Transporteur\ChauffeurController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -108,6 +111,11 @@ Route::prefix('v1/trans')->group(function () {
         // Route de pour proposer un prix pour un fret introduit
         Route::post('/frets-introduits/propositions-prix/store/{keyfret}', [FretTransController::class, 'storePrix']);
 
+        // Route de pour renvoyer les camions d'un transporteur
+        Route::get('/mes-camions/{key}', [CamionController::class, 'index']);
+
+        // Route de pour renvoyer les chauffeur d'un transporteur
+        Route::get('/mes-chauffeurs/{key}', [ChauffeurController::class, 'index']);
 
     });
    
