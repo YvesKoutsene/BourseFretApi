@@ -53,7 +53,6 @@ class EtapeController extends Controller
             $tournee->statut = 20; // Statut "en cours"
             $tournee->save();
 
-            // Mise en cours du fret associé, **uniquement si ce n'est pas déjà fait**
             if ($fret = $tournee->fret) {
                 if ($fret->statut !== 40) {
                     $fret->statut = 40; // Fret en cours

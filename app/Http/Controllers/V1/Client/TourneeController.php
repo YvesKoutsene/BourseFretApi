@@ -11,7 +11,7 @@ use App\Models\Client;
 class TourneeController extends Controller
 {
     // Fonction permettant de ramener les tournées d'un fret
-    public function index(Request $request, $key)
+    /*public function index(Request $request, $key)
     {
         // Vérification de l'authentification 
         if (!$request->user()) {
@@ -33,7 +33,8 @@ class TourneeController extends Controller
         // Récupérer toutes les tournées associées au fret
         $tournees = Tournee::with(['fret','derniereEtape', 'camionActif'])
             ->where('idfret', $fret->id)
-            ->orderByDesc('created_at');
+            ->groupBy('statut', [20, 10, 30]);
+            //->orderByDesc('created_at');
 
         if ($search) {
             $tournees = $tournees->where(function ($query) use ($search) {
@@ -49,6 +50,50 @@ class TourneeController extends Controller
         }
 
         return response()->json($tournees, 200); // Ok
+    }*/
+
+    public function index(Request $request, $key)
+    {
+        if (!$request->user()) {
+            return response()->json(null, 401);
+        }
+
+        $fret = Fret::with(['lieuchargement', 'lieudechargement'])
+            ->where('keyfret', $key)
+            ->first();
+
+        if (!$fret) {
+            return response()->json(null, 404);
+        }
+
+        $pageSize = $request->input('page_size', 10);
+        $search = $request->input('q');
+
+        $tourneesQuery = Tournee::with(['fret', 'derniereEtape', 'camionActif'])
+            ->where('idfret', $fret->id)
+            ->orderByRaw("
+            CASE statut
+                WHEN 20 THEN 1
+                WHEN 10 THEN 2
+                WHEN 30 THEN 3
+                ELSE 4
+            END
+        ");
+
+        if ($search) {
+            $tourneesQuery->where(function ($query) use ($search) {
+                $query->where('numerobl', 'like', "%$search%")
+                    ->orWhere('numeroconteneur', 'like', "%$search%");
+            });
+        }
+
+        $tournees = $tourneesQuery->paginate($pageSize);
+
+        if ($tournees->isEmpty()) {
+            return response()->json(null, 204);
+        }
+
+        return response()->json($tournees, 200);
     }
 
 
@@ -60,8 +105,8 @@ class TourneeController extends Controller
         }
 
         $tournee = Tournee::with(['fret', 'camionActif'])
-        ->where('keytournee', $key)
-        ->first();
+            ->where('keytournee', $key)
+            ->first();
 
         if (!$tournee) {
             return response()->json(null, 404);

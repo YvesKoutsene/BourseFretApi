@@ -40,8 +40,8 @@ class FretController extends Controller
         $query->with(['lieuchargement', 'lieudechargement', 'typemarchandise','typevehicule']);
 
         // Pagination
-        $pageSize = $request->input('page_size', 15);
-        $page = $request->input('page', 1);
+        $pageSize = $request->input('page_size', 15); // Before 15
+        $page = $request->input('page', 1); // Before 1
 
         $frets = $query->paginate($pageSize, ['*'], 'page', $page);
 

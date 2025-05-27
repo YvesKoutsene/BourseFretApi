@@ -160,7 +160,7 @@ class AuthController extends Controller
         $user->load(['indicatif', 'pays', 'client']);
 
         return response()->json([
-            'user' => $user->makeHidden(['motdepasse', 'access_token', 'createdby', 'updatedby']),
+            'user' => $user->makeHidden(['motdepasse', 'access_token'/*, 'createdby', 'updatedby'*/]),
         ], 200);
     }
 

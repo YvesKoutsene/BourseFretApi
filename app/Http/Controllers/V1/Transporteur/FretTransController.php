@@ -72,7 +72,7 @@ class FretTransController extends Controller
             return response()->json(null, 401); // Non authentifié
         }
 
-        $frets = Fret::where('statut', 20)
+        $frets = Fret::whereIn('statut', [20,30])
             ->with(['lieuchargement', 'lieudechargement', 'typemarchandise'])
             ->orderBy('created_at', 'desc')
             ->get();
