@@ -5,12 +5,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\Client\AuthController;
 use App\Http\Controllers\V1\Client\FretController;
 use App\Http\Controllers\V1\Client\TourneeController;
+
 use App\Http\Controllers\V1\Transporteur\AuthTransController;
 use App\Http\Controllers\V1\Transporteur\EtapeController;
 use App\Http\Controllers\V1\Transporteur\FretTransController;
 use App\Http\Controllers\V1\Transporteur\TourneeTransController;
 use App\Http\Controllers\V1\Transporteur\CamionController;
 use App\Http\Controllers\V1\Transporteur\ChauffeurController;
+
+use App\Http\Controllers\V1\Affreteur\PropxController;
+use App\Http\Controllers\V1\Affreteur\FretAftController;
 
 
 /*
@@ -102,15 +106,6 @@ Route::prefix('v1/trans')->group(function () {
         // Route pour ajouter les étapes des tournées en cours d'un fret
         Route::post('/tournees-fret/etapes/store', [EtapeController::class, 'store']);
 
-        // Route pour récupérer les frets introduits
-        Route::get('/frets-introduits', [FretTransController::class, 'getFretIntroduits']);
-
-        // Route de récupération des propositions d'un fret
-        Route::get('/frets-introduits/propositions-prix/{keyfret}', [FretTransController::class, 'getPropositionsPrix']);
-
-        // Route de pour proposer un prix pour un fret introduit
-        Route::post('/frets-introduits/propositions-prix/store/{keyfret}', [FretTransController::class, 'storePrix']);
-
         // Route de pour renvoyer les camions d'un transporteur
         Route::get('/mes-camions/{key}', [CamionController::class, 'index']);
 
@@ -119,4 +114,22 @@ Route::prefix('v1/trans')->group(function () {
 
     });
    
+});
+
+Route::prefix('v1/aft')->group(function () {
+
+    Route::middleware('auth:sanctum')->group(function () {
+
+        // Route pour récupérer les frets introduits
+        Route::get('/frets-introduits', [FretAftController::class, 'index']);
+
+        // Route de récupération des propositions d'un fret
+        Route::get('/frets-introduits/propositions-prix/{keyfret}', [PropxController::class, 'index']);
+
+        // Route de pour proposer un prix pour un fret introduit
+        Route::post('/frets-introduits/propositions-prix/store/{keyfret}', [PropxController::class, 'store']);
+
+
+    });
+
 });
