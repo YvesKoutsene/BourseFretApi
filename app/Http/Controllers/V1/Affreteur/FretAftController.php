@@ -28,5 +28,14 @@ class FretAftController extends Controller
             'frets' => $frets
         ], 200); // Ok
     }
-    
+
+    // Fonction pour valider un fret (Avec attribution au Transporteur anaxar idtrans = 4)
+    public function validation(Request $request, $key){
+
+         if (!$request->user()) {
+            return response()->json(null, 401); // Non authentifié
+        }
+        
+    }
+
 }
